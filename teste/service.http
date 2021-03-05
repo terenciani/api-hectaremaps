@@ -1,0 +1,17 @@
+# @host = localhost:3000
+
+
+GET http://localhost:3000/service HTTP/1.1
+content-type: application/json
+
+###
+POST http://localhost:3000/service HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Ortomosaíco",
+    "description": "Você pode usar o ortomosaico como uma representação cartográfica, permitindo uma visualização completa da área mapeada com os drones. Entre os principais benefícios, citamos a economia de tempo, a riqueza nos detalhes e a precisão de imagens feitas com o uso de drones, para a obtenção de resultados satisfatórios.",
+    "price": 200
+}
+
+###

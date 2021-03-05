@@ -10,7 +10,6 @@ require('./src/main/services/LoggerService');
 const express = require('express');
 const cors = require('cors');
 const BodyParser = require('body-parser');
-//const ConnectionFactory = require('./connection/ConnectionFactory');
 const Loader = require('./Loader');
 const Server = require('./Server');
 

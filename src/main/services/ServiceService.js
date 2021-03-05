@@ -12,6 +12,19 @@ module.exports = class ServiceService {
         }
     } // getList()
 
+    static async create({name, description, image, price}) {
+        try {
+            return await Database("service").insert({
+                name, 
+                description, 
+                image, 
+                price
+            })
+        } catch (error) {
+            throw new Error("ServiceService.create: " + error);
+        }
+    } // getList()
+
     static async findOne(params) {
         
     } // findOne

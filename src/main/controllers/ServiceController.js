@@ -13,12 +13,12 @@ module.exports = class AssociateController {
   } // findAll()
   
   
-  static async getOne(req, res) {
+  static async create(req, res) {
     try {
-      res.status(200).send(await ServiceService.findOne(req.params));
+      res.status(200).send(await ServiceService.create(req.body));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("ServiceController.getOne " + e.message);
+      global.logger.error("ServiceController.create " + e.message);
     }
   } // findOne()
 }; // class
