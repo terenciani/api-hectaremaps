@@ -9,6 +9,7 @@ require('./src/main/services/LoggerService');
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const BodyParser = require('body-parser');
 const Loader = require('./Loader');
 const Server = require('./Server');
@@ -33,9 +34,9 @@ class App {
         }
 
 
-          
-        app.use(cors(corsOptions));
-          
+        */
+        app.use(cors());
+        /*  
         try {
             global.logger.info("Obtendo conexão com o banco de dados...");
             await ConnectionFactory.getConnection();
@@ -46,6 +47,8 @@ class App {
         } */
 
         app.use('/uploads', express.static('uploads'));
+
+        global.appRoot = path.resolve(__dirname);
 
         // parse requests of content-type - application/json
         app.use(BodyParser.json({
