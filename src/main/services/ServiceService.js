@@ -23,9 +23,5 @@ module.exports = class ServiceService {
         } catch (error) {
             throw new Error("ServiceService.create: " + error);
         }
-    } // getList()
-
-    static async findOne(params) {
-        
-    } // findOne
+    } // create()
 } // class

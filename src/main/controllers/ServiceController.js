@@ -2,7 +2,7 @@
 
 const ServiceService = require("../services/ServiceService");
 
-module.exports = class AssociateController {
+module.exports = class ServiceController {
   static async getList(req, res) {
     try {        
       res.status(200).send(await ServiceService.getList());
@@ -10,7 +10,7 @@ module.exports = class AssociateController {
       res.status(500).send(e.message);
       global.logger.error("ServiceController.getList " + e.message);
     }
-  } // findAll()
+  } // getList()
   
   
   static async create(req, res) {
@@ -20,5 +20,5 @@ module.exports = class AssociateController {
       res.status(500).send(e.message);
       global.logger.error("ServiceController.create " + e.message);
     }
-  } // findOne()
+  } // create()
 }; // class
