@@ -14,8 +14,14 @@ module.exports = class PlanService {
 
     static async getFullList() {
         try {
-            return await Database('plan')
-            .leftJoin('item_plan', 'plan.id_plan', 'item_plan.fk_plan')
+            let plans = await Database('plan')
+            
+            for (let i = 0; i < plans.length; i++) {
+                let planItems = [];
+                planItems = await Database('item_plan').where('fk_plan', '=', plans[i].id_plan)
+                plans[i].plan_items = planItems   
+            }
+            return plans
         } catch (error) {
             throw new Error("PlanService.getFullList: " + error);
         }
