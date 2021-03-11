@@ -12,7 +12,7 @@ class Server {
         this.app = new Express();
 
         this.port = this.normalizePort(global.config.port);
-        this.debug = debug('association:server');
+        this.debug = debug('hectaremaps:server');
 
         this.server = http.createServer(this.app);
         this.server.on('error', this.onError);

@@ -21,7 +21,8 @@ class Config{
                     user: "",
                     pass: ""
                 },
-                tls: { rejectUnauthorized: false }
+                tls: { rejectUnauthorized: false },
+                to: ""
             }
         }
     }
