@@ -19,6 +19,7 @@ const Server = require('./Server');
 class App {
 
     static async init() {
+        
 
         let app = new Server();
 

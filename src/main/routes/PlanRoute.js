@@ -7,7 +7,7 @@ module.exports = class ServiceRoute {
             .get(PlanController.getList)
             .post(PlanController.create)
         
-        app.route("/plananditems")
+        app.route("/plansanditems")
             .get(PlanController.getFullList)
     } // constructor()
 } // class
