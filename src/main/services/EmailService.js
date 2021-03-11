@@ -19,7 +19,7 @@ module.exports = class EmailService {
         try {
             await this.sendForAdministrator(data)
             await this.sendForClient(data)
-            return true
+            return "E-mail enviado com sucesso!"
         } catch (error) {
             throw new Error("ServiceService.send: " + error);
         }
@@ -42,7 +42,7 @@ module.exports = class EmailService {
     static async sendForClient(data){
         let mailOptions = {
             from: global.config.mail.auth.user,
-            to: data.email,
+            to: data.address,
             subject: '[HECTAREMAPS] Confirmação de Recebimento',
             html: this.configureClientMessage(data)
         };
@@ -67,7 +67,7 @@ module.exports = class EmailService {
 
     static configureAdminMessage(data){
         let message = "<h2>De:</h2> ";
-        message  += data.name + " - " + data.email;
+        message  += data.name + " - " + data.address;
         message  += "<h2>Mensagem</h2>";
         message  += "<p>" + data.message + "</p>";
 

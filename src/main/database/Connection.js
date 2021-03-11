@@ -1,10 +1,10 @@
 const knex = require('knex')({
     client: 'mysql2',
     connection: {
-      host : '127.0.0.1',
-      user : 'hectar77_root',
-      password : 'TeT.28465',
-      database : 'hectar77_banco'
+      host : global.config.db.host,
+      user : global.config.db.user,
+      password : global.config.db.password,
+      database : global.config.db.database
     }
 });
 

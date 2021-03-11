@@ -5,7 +5,7 @@ content-type: application/json
 
 {
     "name": "Marcelo Figueiredo Terenciani",
-    "email": "terenciani@outlook.com",
+    "address": "terenciani@outlook.com",
     "message": "Eu sou uma mensagem teste"
 }
 

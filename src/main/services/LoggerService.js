@@ -21,5 +21,4 @@ class LoggerService {
     }
 
 }
-
 module.exports = LoggerService.init();
