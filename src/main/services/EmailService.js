@@ -119,7 +119,7 @@ module.exports = class EmailService {
     static adminRegisterMessage(data){
         let message = "<p>Um novo cadastro foi realizado no site. </p> <br />"
         
-        message += `<p>Nome: ${data.nme}</p>`;
+        message += `<p>Nome: ${data.name}</p>`;
         message += `<p>Sobrenome: ${data.lastname}</p>`;
         message += `<p>E-mail: ${data.email}</p>`;
         message += `<p>Telefone: ${data.phone}</p>`;
