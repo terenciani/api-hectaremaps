@@ -1,0 +1,13 @@
+# @host = localhost:3000
+###
+POST http://localhost:3000/signup HTTP/1.1
+content-type: application/json
+
+{
+    "email": "marcelo.figterenciani@gmail.com",
+    "lastname": "Terenciani",
+    "name": "Marcelo",
+    "phone": "44998887342"
+}
+
+###
