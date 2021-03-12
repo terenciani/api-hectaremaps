@@ -1,7 +1,6 @@
 "use strict";
 
 const nodemailer = require('nodemailer');
-require('dotenv').config()
 
 const transporter = nodemailer.createTransport({
     name: process.env.MAIL_USER,
