@@ -1,17 +1,18 @@
 "use strict";
 
 const nodemailer = require('nodemailer');
+require('dotenv').config()
 
 const transporter = nodemailer.createTransport({
-    name: global.config.mail.auth.user,
-    host: global.config.mail.host,
-    port: global.config.mail.port,
-    secure: global.config.mail.secure,
+    name: process.env.MAIL_USER,
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: process.env.MAIL_SECURE,
     auth: {
-        user: global.config.mail.auth.user,
-        pass: global.config.mail.auth.pass
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
     },
-    tls: { rejectUnauthorized: false }
+    tls: { rejectUnauthorized: process.env.MAIL_TLS }
 });
 
 module.exports = class EmailService {
@@ -27,8 +28,8 @@ module.exports = class EmailService {
 
     static async sendForAdministrator(data){
         let mailOptions = {
-            from: global.config.mail.auth.user,
-            to: global.config.mail.to,
+            from: process.env.MAIL_USER,
+            to: process.env.MAIL_TO,
             subject: '[SITE] E-mail de contato - ' + data.name,
             html: this.configureAdminMessage(data)
         };
@@ -41,7 +42,7 @@ module.exports = class EmailService {
 
     static async sendForClient(data){
         let mailOptions = {
-            from: global.config.mail.auth.user,
+            from: process.env.MAIL_USER,
             to: data.address,
             subject: '[HECTAREMAPS] Confirmação de Recebimento',
             html: this.configureClientMessage(data)
@@ -56,7 +57,7 @@ module.exports = class EmailService {
     
 
     static configureClientMessage(data){
-        let message = "<p>Olá <strong>" + data.name + "</strong>. Agradeçemos sua visita e a oportunidade de recebermos o seu contato. Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p>"
+        let message = "<p>Olá <strong>" + data.name + "</strong>. <br /> <br /> Agradeçemos sua visita e a oportunidade de recebermos o seu contato. Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p>"
         
         message += "<p>HectareMaps.</p>";
 

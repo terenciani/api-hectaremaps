@@ -1,9 +1,5 @@
 "use strict";
 
-if (process.env.NODE_ENV == 'homolog') require('./config.homolog.js');
-else require('./config');
-
-
 
 require('./src/main/services/LoggerService');
 
@@ -76,7 +72,7 @@ class App {
         })
         
         // set port, listen for requests
-        const PORT = process.env.PORT || global.config.port;
+        const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             global.logger.success(`API HectareMaps ${PORT}`);
         });

@@ -11,7 +11,7 @@ class Server {
 
         this.app = new Express();
 
-        this.port = this.normalizePort(global.config.port);
+        this.port = this.normalizePort(process.env.PORT ||3000);
         this.debug = debug('hectaremaps:server');
 
         this.server = http.createServer(this.app);
