@@ -7,7 +7,6 @@ const basename = path.basename(module.filename);
 class Loader {
 
     static loadAll(app) {
-        Loader.loadModels();
         Loader.loadRoutes(app);
     }
 
@@ -24,21 +23,6 @@ class Loader {
                 new route(app);
             });
     }
-
-    static loadModels() {
-        let baseDir = (__dirname + '/src/main/models');
-        fs
-            .readdirSync(baseDir)
-            .filter(function (file) {
-                return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-            })
-            .forEach(function (file) {
-                global.logger.info(`Loading models: ${file}`);
-                let model = require((path.join(baseDir, file)));
-                new model();
-            });
-    }
-
 }
 
 module.exports = Loader;
