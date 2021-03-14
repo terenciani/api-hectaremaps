@@ -32,8 +32,11 @@ module.exports = class RegisterService {
             if(!user || !user.id_user)
                 return {status: 422, message: "Senha incorreta!"}
             
-            if(user.status == "BLOCKED")
+            if(user.status == "NEW")
                 return {status: 422, message: "Seu acesso ainda não foi autorizado. Aguarde nosso contato."}
+
+            if(user.status == "BLOCKED")
+                return {status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!"}
 
             let token = TokenUtil.genereteToken({name: user.name, email: user.email, id_user: user.id_user, role: user.role});
 
@@ -66,6 +69,7 @@ module.exports = class RegisterService {
             email: user.email,
             name: user.name,
             role: user.role,
+            status: user.status,
             token: token
         };
     }// loggedUserFormatter
