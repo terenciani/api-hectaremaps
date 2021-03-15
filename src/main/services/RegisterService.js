@@ -44,7 +44,7 @@ module.exports = class RegisterService {
             if (user.status == "BLOCKED")
                 return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
 
-            Database("user").where({ email: email }).update({
+            Database("user").where({ email: user.email }).update({
                 access_at: Date.now()
             })
 
