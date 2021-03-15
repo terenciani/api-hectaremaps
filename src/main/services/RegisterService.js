@@ -44,8 +44,8 @@ module.exports = class RegisterService {
             if (user.status == "BLOCKED")
                 return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
 
-            Database("user").where({ email: user.email }).update({
-                access_at: Date().toISOString()
+            await Database("user").where({ email: user.email }).update({
+                access_at: new Date()
             })
 
             let token = TokenUtil.genereteToken({ name: user.name, email: user.email, id_user: user.id_user, role: user.role });

@@ -7,5 +7,9 @@ const knex = require('knex')({
     database: process.env.DB_NAME
   }
 });
-
+/*
+knex.on( 'query', function( queryData ) {
+    console.log( queryData.sql );
+});
+*/
 module.exports = knex;
