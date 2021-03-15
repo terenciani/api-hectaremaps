@@ -8,5 +8,8 @@ module.exports = class RegisterRoute {
         
         app.route("/signin")
             .post(RegisterController.signIn)
+
+        app.route("/recovery")
+            .post(RegisterController.recovery)
     } // constructor()
 } // class

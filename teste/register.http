@@ -41,6 +41,16 @@ content-type: application/json
     "email": "marcelo.terenciani@gmail.com",
     "password": "54321"
 }
+###
+
+# Recovery PASS
+POST http://localhost:3000/recovery HTTP/1.1
+content-type: application/json
+
+{
+    "email": "marcelo.terenciani@gmail.com"
+}
+
 
 
 

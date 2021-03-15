@@ -35,6 +35,15 @@ module.exports = class EmailService {
         }
     } // registerNotify()
 
+    static recoveryNotify(data) {
+        try {
+            this.notifyClient(data, "RECOVERY")
+            return
+        } catch (error) {
+            throw new Error("EmailService.registerNotify: " + error);
+        }
+    } // recoveryNotify()
+
     static async notifyAdmin(data, type){
         let subject = "";
         let message = "";
@@ -73,6 +82,10 @@ module.exports = class EmailService {
                 subject = "[HECTAREMAPS] Confirmação de Recebimento"
                 message = this.clientContactMessage(data);
             break;
+            case 'RECOVERY':
+                subject = "[HECTAREMAPS] Recuperação de senha"
+                message = this.clientRecoveryMessage(data);
+            break;
         }
         let mailOptions = {
             from: process.env.MAIL_USER,
@@ -94,8 +107,22 @@ module.exports = class EmailService {
 
         message += "<p>Observação - Não é necessário responder esta mensagem.</p>";;
 
+        message += "<p>HectaraMaps</p>";
+
         return message
     } //clientContactMessage
+
+    static clientRecoveryMessage(data){
+        let message = "<h2>Solicitação de recuperação de senha</h2> ";
+        message  += "<p>Senha: " + data.temp_password + "</p> ";
+
+        message  += "<p>Se vcê não fez essa solicitação, basta ignorar este e-mail.";
+
+        message += "<p>Observação - Não é necessário responder esta mensagem.</p>";;
+
+        message += "<p>HectaraMaps</p>";
+        return message
+    } //clientRecoveryMessage
 
     static clientRegisterMessage(data){
         let message = "<p>Olá <strong>" + data.name + "</strong>. <br /> <br /> Agradeçemos o seu registro. Em breve você receberá no e-mail fornecido a resposta para sua solicitação de cadastro. </p>"
@@ -103,6 +130,8 @@ module.exports = class EmailService {
         message += "<p>HectareMaps.</p>";
 
         message += "<p>Observação - Não é necessário responder esta mensagem.</p>";
+
+        message += "<p>HectaraMaps</p>";
 
         return message
     } //clientRegisterMessage
