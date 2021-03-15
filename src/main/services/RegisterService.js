@@ -44,10 +44,14 @@ module.exports = class RegisterService {
             if (user.status == "BLOCKED")
                 return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
 
+            Database("user").where({ email: email }).update({
+                access_at: Date.now()
+            })
+
             let token = TokenUtil.genereteToken({ name: user.name, email: user.email, id_user: user.id_user, role: user.role });
 
             let userFormatted = await this.loggedUserFormatter(user, token);
-
+            
             return { status: 200, message: "Acesso Autorizado.", user: userFormatted }
 
         } catch (error) {
@@ -70,7 +74,6 @@ module.exports = class RegisterService {
             await Database("user").where({ email: email }).update({
                 temp_password: md5(password),
                 status: "UPDATE"
-
             })
 
             user.temp_password = password
