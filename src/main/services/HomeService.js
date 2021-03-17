@@ -34,14 +34,14 @@ module.exports = class HomeService {
                 },
                 service: {
                     title: 'Nossos Serviços',
-                    background: 'bg_service.jpg',
+                    background: 'bg_services.jpeg',
                 },
                 plan: {
                     title: 'Conheça Nosos Planos',
                 },
                 video: {
                     title: 'Equipamentos de Última Geração',
-                    src: '',
+                    src: 'drone-lancamento.mp4',
                     background: 'bg_video.jpg'
                 },
                 contact: {

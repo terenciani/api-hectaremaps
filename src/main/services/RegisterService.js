@@ -86,13 +86,14 @@ module.exports = class RegisterService {
         }
     } // recovery()
 
-    static async create({ name, lastname, email, phone }) {
+    static async create({ name, lastname, email, phone, password }) {
         try {
             return await Database("user").insert({
                 name,
                 lastname,
                 email,
-                phone
+                phone,
+                password
             })
         } catch (error) {
             throw new Error("RegisterService.create: " + error);
