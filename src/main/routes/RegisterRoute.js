@@ -11,5 +11,8 @@ module.exports = class RegisterRoute {
 
         app.route("/recovery")
             .post(RegisterController.recovery)
+        
+        app.route("/emailconfirm/:token")
+            .get(RegisterController.emailConfirm)
     } // constructor()
 } // class

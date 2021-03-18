@@ -14,7 +14,7 @@ module.exports = class RegisterService {
             if (!result || !result.id_user) {
                 await this.create(data)
                 EmailService.registerNotify(data)
-                return { status: 200, message: "Pedido de registro realizado! Aguarde nosso contato." }
+                return { status: 200, message: "Pedido de registro realizado! Um link de confirmação foi enviado para o email informado. Em 48 horas ele irá expirar" }
             } else {
                 return { status: 422, message: "E-mail já cadastrado!" }
             }
@@ -29,20 +29,20 @@ module.exports = class RegisterService {
             if (!emailValid || !emailValid.id_user)
                 return { status: 422, message: "E-mail não encontrado!" }
 
+            if (emailValid.status == "NEW")
+                return { status: 422, message: "Seu acesso ainda não foi autorizado! Confirme seu cadastro no link recebido por e-mail." }
+
+            if (emailValid.status == "BLOCKED")
+                return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
+            
             let user = {}
             if (emailValid.status == 'UPDATE')
                 user = await Database("user").where({ email: data.email, password: data.password }).orWhere({ email: data.email, temp_password: data.password }).first()
             else
                 user = await Database("user").where({ email: data.email, password: data.password }).first()
-
+            
             if (!user || !user.id_user)
                 return { status: 422, message: "Senha incorreta!" }
-
-            if (user.status == "NEW")
-                return { status: 422, message: "Seu acesso ainda não foi autorizado. Aguarde nosso contato." }
-
-            if (user.status == "BLOCKED")
-                return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
 
             await Database("user").where({ email: user.email }).update({
                 access_at: new Date()
@@ -66,11 +66,17 @@ module.exports = class RegisterService {
             if (!user || !user.id_user)
                 return { status: 422, message: "E-mail não encontrado!" }
 
+            if (user.status == "NEW")
+                return { status: 422, message: "Seu acesso ainda não foi autorizado! Confirme seu cadastro no link recebido por e-mail." }
+
+            if (user.status == "BLOCKED")
+                return { status: 422, message: "Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!" }
+            
             let password = generator.generate({
                 length: 10,
                 numbers: true
             });
-
+            
             await Database("user").where({ email: email }).update({
                 temp_password: md5(password),
                 status: "UPDATE"
@@ -86,6 +92,43 @@ module.exports = class RegisterService {
         }
     } // recovery()
 
+    static async emailConfirm(token) {
+        try {
+            let data = TokenUtil.decodeToken(token);
+            
+            if (!data || !data.user)
+                return {message: `<h1 style="text-align: center">Não foi possível validar este e-mail. Entre em contato conosco!` }
+
+            let user = await Database("user").where({ email: data.user.email }).first()
+
+            if (!user || !user.id_user)
+                return { message: `<h1 style="text-align: center">E-mail não encontrado!</h1>` }
+            
+            if (user.status == "BLOCKED")
+                return { message: `<h1 style="text-align: center">Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!</h1>` }
+            
+            if (user.status == "ACTIVE")
+                return {
+                    message: `<div style="text-align: center;">
+                                <h1>Este e-mail já foi confirmado!</h1>
+                                <a href='${process.env.HOST}'>Clique aqui para realizar o login. </a>
+                            </div>` }
+            
+            await Database("user").where({ email: user.email }).update({
+                confirm_at: new Date(),
+                status: "ACTIVE"
+            })
+
+            return {
+                message: `<div style="text-align: center;">
+                                <h1>E-mail confirmado com sucesso!</h1>
+                                <a href='${process.env.HOST}'>Clique aqui para realizar o login. </a>
+                            </div>` }
+
+        } catch (error) {
+            throw new Error("RegisterService.emailConfirm: " + error);
+        }
+    } // emailConfirm()
     static async create({ name, lastname, email, phone, password }) {
         try {
             return await Database("user").insert({

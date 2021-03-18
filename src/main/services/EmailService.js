@@ -1,6 +1,7 @@
 "use strict";
 
 const nodemailer = require('nodemailer');
+const TokenUtil = require("../utils/TokenUtil");
 
 const transporter = nodemailer.createTransport({
     name: process.env.MAIL_USER,
@@ -75,15 +76,15 @@ module.exports = class EmailService {
         let message = "";
         switch(type){
             case 'REGISTER':
-                subject = '[HECTAREMAPS] Confirmação de registro';
+                subject = `[${process.env.COMPANY.toUpperCase()}] Confirmação de registro`;
                 message = this.clientRegisterMessage(data);
             break;
             case 'CONTACT':
-                subject = "[HECTAREMAPS] Confirmação de Recebimento"
+                subject = `[${process.env.COMPANY.toUpperCase()}] Confirmação de Recebimento`
                 message = this.clientContactMessage(data);
             break;
             case 'RECOVERY':
-                subject = "[HECTAREMAPS] Recuperação de senha"
+                subject = `[${process.env.COMPANY.toUpperCase()}] Recuperação de senha`
                 message = this.clientRecoveryMessage(data);
             break;
         }
@@ -101,58 +102,44 @@ module.exports = class EmailService {
     } //notifyClient
 
     static clientContactMessage(data){
-        let message = "<p>Olá <strong>" + data.name + "</strong>. <br /> <br /> Agradeçemos sua visita e a oportunidade de recebermos o seu contato. Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p>"
-        
-        message += "<p>HectareMaps.</p>";
-
-        message += "<p>Observação - Não é necessário responder esta mensagem.</p>";;
-
-        message += "<p>HectaraMaps</p>";
-
-        return message
+        return `<p>Olá <strong> ${data.name}</strong>. </p> <br />
+        <p>Agradeçemos sua visita e a oportunidade de recebermos o seu contato. Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p> <br />
+        <p>Atenciosamente,</p>
+        <p>${process.env.COMPANY}</p><br />
+        <p>Observação - Não é necessário responder esta mensagem.</p>`
     } //clientContactMessage
 
     static clientRecoveryMessage(data){
-        let message = "<h2>Solicitação de recuperação de senha</h2> ";
-        message  += "<p>Senha: " + data.temp_password + "</p> ";
-
-        message  += "<p>Se vcê não fez essa solicitação, basta ignorar este e-mail.";
-
-        message += "<p>Observação - Não é necessário responder esta mensagem.</p>";;
-
-        message += "<p>HectaraMaps</p>";
-        return message
+        return `h2>Solicitação de recuperação de senha</h2>
+        <p>Senha: ${data.temp_password}</p>
+        <p>Se vcê não fez essa solicitação, basta ignorar este e-mail.</p>
+        <p>Observação - Não é necessário responder esta mensagem.</p>
+        <p>${process.env.COMPANY}</p>`;
     } //clientRecoveryMessage
 
-    static clientRegisterMessage(data){
-        let message = "<p>Olá <strong>" + data.name + "</strong>. <br /> <br /> Agradeçemos o seu registro. Em breve você receberá no e-mail fornecido a resposta para sua solicitação de cadastro. </p>"
-        
-        message += "<p>HectareMaps.</p>";
+    static clientRegisterMessage(data) {
+        let token = TokenUtil.genereteToken({ name: data.name, email: data.email, id_user: data.id_user, role: data.role });
 
-        message += "<p>Observação - Não é necessário responder esta mensagem.</p>";
-
-        message += "<p>HectaraMaps</p>";
-
-        return message
+        return `<p>Olá <strong> ${data.name}</strong>.</p>
+        <p>Você acabou de realizar seu registro na ${process.env.COMPANY} usando esta conta de e-mail.</p>
+        <a href='${process.env.HOST}/emailconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
+        <p>Atenciosamente,</p>
+        <p>${process.env.COMPANY}</p>
+        <p>Observação - Não é necessário responder esta mensagem.</p>`
     } //clientRegisterMessage
 
     static adminContactMessage(data){
-        let message = "<h2>De:</h2> ";
-        message  += data.name + " - " + data.email;
-        message  += "<h2>Mensagem</h2>";
-        message  += "<p>" + data.message + "</p>";
-
-        return message
+        return `<h3>De:</h3> 
+        <p>${data.name} - ${data.email}</p>
+        <h3>Mensagem</h3>
+        <p>${data.message}</p>`;
     } //adminContactMessage
 
     static adminRegisterMessage(data){
-        let message = "<p>Um novo cadastro foi realizado no site. </p> <br />"
-        
-        message += `<p>Nome: ${data.name}</p>`;
-        message += `<p>Sobrenome: ${data.lastname}</p>`;
-        message += `<p>E-mail: ${data.email}</p>`;
-        message += `<p>Telefone: ${data.phone}</p>`;
-
-        return message
+        return `<p>Um novo cadastro foi realizado no site. </p>
+        <p><strong>Nome:</strong> ${data.name}</p>
+        <p><strong>Sobrenome:</strong> ${data.lastname}</p>
+        <p><strong>E-mail:</strong> ${data.email}</p>
+        <p><strong>Telefone:</strong> ${data.phone}</p>`;
     } //adminContactMessage
 } // class

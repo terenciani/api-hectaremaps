@@ -29,4 +29,15 @@ module.exports = class RegisterController {
       global.logger.error("RegisterController.recovery " + e.message);
     }
   } // recovery()
+  static async emailConfirm(req, res) {
+    try {
+      if (!req.params.token) throw new Error("Ocorreu um erro ao validar seu e-mail. Entre em contato conosco!");
+      let { message } = await RegisterService.emailConfirm(req.params.token);
+      res.set('Content-Type', 'text/html');
+      res.status(200).send(Buffer.from(message));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("RegisterController.emailConfirm " + e.message);
+    }
+  } // emailConfirm()
 }; // class
