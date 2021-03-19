@@ -122,7 +122,7 @@ module.exports = class EmailService {
 
         return `<p>Olá <strong> ${data.name}</strong>.</p>
         <p>Você acabou de realizar seu registro na ${process.env.COMPANY} usando esta conta de e-mail.</p>
-        <a href='${process.env.HOST}/emailconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
+        <a href='${process.env.API}/emailconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
         <p>Atenciosamente,</p>
         <p>${process.env.COMPANY}</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>`

@@ -111,7 +111,7 @@ module.exports = class RegisterService {
                 return {
                     message: `<div style="text-align: center;">
                                 <h1>Este e-mail já foi confirmado!</h1>
-                                <a href='${process.env.HOST}'>Clique aqui para realizar o login. </a>
+                                <a href='${process.env.ADMIN}'>Clique aqui para realizar o login. </a>
                             </div>` }
             
             await Database("user").where({ email: user.email }).update({
@@ -122,7 +122,7 @@ module.exports = class RegisterService {
             return {
                 message: `<div style="text-align: center;">
                                 <h1>E-mail confirmado com sucesso!</h1>
-                                <a href='${process.env.HOST}'>Clique aqui para realizar o login. </a>
+                                <a href='${process.env.ADMIN}'>Clique aqui para realizar o login. </a>
                             </div>` }
 
         } catch (error) {

@@ -49,7 +49,7 @@ POST http://localhost:3000/recovery HTTP/1.1
 content-type: application/json
 
 {
-    "email": "marcelo.terenciani@gmail.com"
+    "email": "marcelo.figterenciani@gmail.com"
 }
 
 
