@@ -102,10 +102,11 @@ module.exports = class EmailService {
     } //notifyClient
 
     static clientContactMessage(data){
-        return `<p>Olá <strong> ${data.name}</strong>. </p> <br />
-        <p>Agradeçemos sua visita e a oportunidade de recebermos o seu contato. Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p> <br />
+        return `<p>Olá <strong> ${data.name}</strong>. </p>
+        <p>Agradeçemos sua visita e a oportunidade de recebermos o seu contato. </p>
+        <p>Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p>
         <p>Atenciosamente,</p>
-        <p>${process.env.COMPANY}</p><br />
+        <p>${process.env.COMPANY}</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>`
     } //clientContactMessage
 
