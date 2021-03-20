@@ -17,7 +17,6 @@ class App {
 
     static async init() {
         
-
         let app = new Server();
 
         /*var linksPermitidos = ['http://front-associacao.herokuapp.com','https://front-associacao.herokuapp.com', 'http://localhost:3000','https://localhost:3000', 'https://localhost:3001', 'http://localhost:3001']

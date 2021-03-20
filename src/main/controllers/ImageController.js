@@ -1,6 +1,9 @@
 "use strict";
 
 const ImageService = require("../services/ImageService");
+ 
+
+
 module.exports = class ImageController {
   static async getImage(req, res) {
     try {
@@ -15,4 +18,12 @@ module.exports = class ImageController {
       global.logger.error("ImageController.getImage " + e.message);
     }
   } // getImage()
+  static async postImageSite(req, res) {
+    try {
+      await ImageService.postImageSite(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("ImageController.postImageSite " + e.message);
+    }
+  } // postImageSite()
 }; // class
