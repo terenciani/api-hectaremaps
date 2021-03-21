@@ -42,7 +42,6 @@ module.exports = class ImageService {
                     let siteData = await SiteService.getData();
                     let fileName = siteData[area].background
                     let relativePath = `./assets/${fileName}`
-                    console.log(relativePath)
                     if (fs.existsSync(relativePath)) {
                         fs.unlink(relativePath, (error) => {
                             console.log(error)
@@ -57,5 +56,29 @@ module.exports = class ImageService {
         } catch (error) {
             throw new Error("ImageService.postImageSite: " + error);
         }
-     } // postImageSite
+    } // postImageSite
+    static async postVideoSite(req, res) {
+        try {
+            upload(req, res, async function (err) {
+                if (err) {
+                    res.status(200).send({ status: 500, message: 'Erro ao enviar o vídeo!' });
+                } else {
+                    let siteData = await SiteService.getData();
+                    let fileName = siteData.video.src
+                    let relativePath = `./assets/${fileName}`
+                    if (fs.existsSync(relativePath)) {
+                        fs.unlink(relativePath, (error) => {
+                            console.log(error)
+                            return
+                        })
+                    }
+                    siteData.video.src = req.file.filename
+                    await SiteService.setData(siteData);
+                    res.status(200).send({ status: 200, message: 'Vídeo atualizado com sucesso!' })
+                }
+            })
+        } catch (error) {
+            throw new Error("ImageService.postVideoSite: " + error);
+        }
+     } // postVideoSite
 } // class

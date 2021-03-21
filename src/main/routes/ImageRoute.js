@@ -8,5 +8,8 @@ module.exports = class ImageRoute {
         
         app.route("/upload/:area")
             .post(ImageController.postImageSite)
+        
+        app.route("/uploadvideo")
+            .post(ImageController.postVideoSite)
     } // constructor()
 } // class

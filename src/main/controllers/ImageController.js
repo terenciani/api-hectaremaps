@@ -26,4 +26,13 @@ module.exports = class ImageController {
       global.logger.error("ImageController.postImageSite " + e.message);
     }
   } // postImageSite()
+
+  static async postVideoSite(req, res) {
+    try {
+      await ImageService.postVideoSite(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("ImageController.postVideoSite " + e.message);
+    }
+  } // postVideoSite()
 }; // class
