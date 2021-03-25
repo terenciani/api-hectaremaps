@@ -1,9 +1,5 @@
 "use strict";
 
-const md5 = require('md5');
-const EmailService = require("./EmailService");
-const TokenUtil = require("../utils/TokenUtil");
-const generator = require('generate-password');
 const Database = require("../database/Connection");
 
 module.exports = class UserService {
@@ -14,4 +10,12 @@ module.exports = class UserService {
             throw new Error("UserService.getAll: " + error);
         }
     } // getAll()
+    static async delete(user) {
+        try {
+            let row = await Database("user").where({ id_user: user.id_user }).del();
+            return row >=1 ? "Exclusão realizada com sucesso!" : "Não foi possível excluir esse registro."
+        } catch (error) {
+            throw new Error("UserService.delete: " + error);
+        }
+    } // delete()
 } // class
