@@ -3,6 +3,13 @@
 const Database = require("../database/Connection");
 
 module.exports = class UserService {
+    static async findById(id_user) {
+        try {
+            return await Database("user").where({ id_user: id_user }).first()
+        } catch (error) {
+            throw new Error("UserService.findById: " + error);
+        }
+    } // findById()
     static async getAll() {
         try {
             return await Database("user")

@@ -26,7 +26,7 @@ module.exports = class RegisterService {
 
     static async signIn(data) {
         try {
-            let emailValid = await await Database("user").where({ email: data.email }).first()
+            let emailValid = await Database("user").where({ email: data.email }).first()
             if (!emailValid || !emailValid.id_user)
                 return { status: 422, message: "E-mail não encontrado!" }
 
