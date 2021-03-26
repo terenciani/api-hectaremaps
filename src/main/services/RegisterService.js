@@ -5,6 +5,7 @@ const EmailService = require("./EmailService");
 const TokenUtil = require("../utils/TokenUtil");
 const generator = require('generate-password');
 const Database = require("../database/Connection");
+const UserService = require("../services/UserService");
 
 module.exports = class RegisterService {
     static async signUp(data) {
@@ -12,7 +13,7 @@ module.exports = class RegisterService {
             let result = await Database("user").where({ email: data.email }).first()
 
             if (!result || !result.id_user) {
-                await this.create(data)
+                await UserService.create(data)
                 EmailService.registerNotify(data)
                 return { status: 200, message: "Pedido de registro realizado! Um link de confirmação foi enviado para o email informado. Em 48 horas ele irá expirar" }
             } else {
@@ -129,19 +130,6 @@ module.exports = class RegisterService {
             throw new Error("RegisterService.emailConfirm: " + error);
         }
     } // emailConfirm()
-    static async create({ name, lastname, email, phone, password }) {
-        try {
-            return await Database("user").insert({
-                name,
-                lastname,
-                email,
-                phone,
-                password
-            })
-        } catch (error) {
-            throw new Error("RegisterService.create: " + error);
-        }
-    } // create()
 
     // Devolver usuario logado com token
     static async loggedUserFormatter(user, token) {

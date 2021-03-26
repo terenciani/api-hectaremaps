@@ -22,4 +22,20 @@ module.exports = class UserController {
       global.logger.error("UserController.delete " + e.message);
     }
   } // delete()
+  static async create(req, res) {
+    try {
+      res.status(200).send(await UserService.create(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("UserController.create " + e.message);
+    }
+  } // create()
+  static async update(req, res) {
+    try {
+      res.status(200).send(await UserService.update(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("UserController.update " + e.message);
+    }
+  } // update()
 }; // class

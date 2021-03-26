@@ -6,5 +6,7 @@ module.exports = class UserRoute {
         app.route("/users")
             .get(UserController.getAll)
             .delete(UserController.delete)
+            .post(UserController.create)
+            .put(UserController.update)
     } // constructor()
 } // class
