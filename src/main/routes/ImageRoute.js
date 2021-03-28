@@ -6,6 +6,9 @@ module.exports = class ImageRoute {
         app.route("/assets/:fileName")
             .get(ImageController.getImage)
         
+        app.route("/assets/icon/:area")
+            .get(ImageController.getIcon)
+        
         app.route("/upload/:area")
             .post(ImageController.postImageSite)
         

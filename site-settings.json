@@ -1,8 +1,16 @@
 {
+  "icon": {
+    "logo": "1616893200409.png",
+    "favicon": "1616893243334.ico",
+    "background": "1616892725620.png"
+  },
   "hero": {
     "title": "Hectare Maps",
     "subtitle": "Plataforma de processamento de imagens com drones",
-    "background": "1616281747075.jpeg"
+    "background": "1616281747075.jpeg",
+    "position": "top",
+    "shownavigationlogo": true,
+    "showlogo": true
   },
   "about": {
     "title": "Quem somos",
@@ -11,10 +19,12 @@
   },
   "service": {
     "title": "Nossos Serviços",
-    "background": "bg_services.jpeg"
+    "background": "bg_services.jpeg",
+    "showprice": true
   },
   "plan": {
-    "title": "Conheça Nosos Planos"
+    "title": "Conheça Nosos Planos",
+    "showprice": true
   },
   "video": {
     "title": "Equipamentos de Última Geração",
