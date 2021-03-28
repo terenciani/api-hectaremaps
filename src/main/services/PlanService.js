@@ -26,7 +26,8 @@ module.exports = class PlanService {
             throw new Error("PlanService.getFullList: " + error);
         }
     } // getFullList()
-    static async create({ name, price, number_of_images, storage_space, observation, active }) {
+
+    static async create({ name, price, number_of_images, storage_space, observation, active, months_of_validity }) {
         try {
             let row = await Database("plan").insert({
                 name,
@@ -34,13 +35,15 @@ module.exports = class PlanService {
                 number_of_images,
                 storage_space,
                 observation,
-                active
+                active,
+                months_of_validity
             })
             return row >=1 ? "Cadastro realizado com sucesso!" : "Não foi possível concluir o registro."
         } catch (error) {
-            throw new Error("PlanService.createPlanItem: " + error);
+            throw new Error("PlanService.create: " + error);
         }
-    } // createPlanItem()
+    } // create()
+    
     static async delete(plan) {
         try {
             await Database("item_plan").where({ fk_plan: plan.id_plan }).del();
@@ -52,6 +55,7 @@ module.exports = class PlanService {
             throw new Error("PlanService.delete: " + error);
         }
     } // delete()
+    
     static async update(plan) {
         try {
             let row = await Database("plan").where({ id_plan: plan.id_plan }).update({
@@ -61,13 +65,15 @@ module.exports = class PlanService {
                 storage_space: plan.storage_space,
                 observation: plan.observation,
                 site_emphasis: plan.site_emphasis,
-                active: plan.active
+                active: plan.active,
+                months_of_validity: plan.months_of_validity
             });
             return row >=1 ? "Atualização realizada com sucesso!" : "Não foi possível atualizar esse registro."
         } catch (error) {
             throw new Error("PlanService.update: " + error);
         }
     } // update()
+    
     static async getItemsByPlan(id_plan) {
         try {
             let planItems = await Database('item_plan').where('fk_plan', '=', id_plan)
@@ -85,6 +91,7 @@ module.exports = class PlanService {
             throw new Error("PlanService.deletePlanItem: " + error);
         }
     } // deletePlanItem()
+
     static async updatePlanItem(planItem) {
         try {
             let row = await Database("item_plan").where({ id_item_plan: planItem.id_item_plan }).update({
@@ -99,6 +106,7 @@ module.exports = class PlanService {
             throw new Error("PlanService.updatePlanItem: " + error);
         }
     } // updatePlanItem()
+    
     static async createPlanItem({ description, quantity, price, unit, active, fk_plan }) {
         try {
             let row = await Database("item_plan").insert({

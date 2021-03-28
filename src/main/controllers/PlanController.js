@@ -38,6 +38,7 @@ module.exports = class PlanController {
       global.logger.error("PlanController.create " + e.message);
     }
   } // create()
+
   static async delete(req, res) {
     try {
       res.status(200).send(await PlanService.delete(req.body));
@@ -54,6 +55,7 @@ module.exports = class PlanController {
       global.logger.error("PlanController.update " + e.message);
     }
   } // update()
+
   static async deletePlanItem(req, res) {
     try {
       res.status(200).send(await PlanService.deletePlanItem(req.body));

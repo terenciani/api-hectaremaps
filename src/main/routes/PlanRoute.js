@@ -5,7 +5,7 @@ const AccessControl = require("../middlewares/AccessControl");
 const accessAdmin = new AccessControl('ADMIN')
 
 const PlanController = require("../controllers/PlanController");
-module.exports = class ServiceRoute {
+module.exports = class PlanRoute {
     constructor(app) {
         app.route("/plan")
             .get(accessAdmin.verify, PlanController.getList)

@@ -1,7 +1,7 @@
 "use strict";
 
 const EmailController = require("../controllers/EmailController");
-module.exports = class ServiceRoute {
+module.exports = class EmaileRoute {
     constructor(app) {
         app.route("/email")
             .post(EmailController.contactNotify)
