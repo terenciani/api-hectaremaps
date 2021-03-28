@@ -24,7 +24,7 @@ module.exports = class ContractService {
                 expires_in: expires, 
                 contract_date: date
             })
-            return row >=1 ? "Cadastro realizado com sucesso!" : "Não foi possível concluir o registro."
+            return row >=1 ? "Sua solicitação foi realizada com sucesso!" : "Não foi possível concluir sua solicitação."
         } catch (error) {
             throw new Error("ContractService.contract: " + error);
         }
