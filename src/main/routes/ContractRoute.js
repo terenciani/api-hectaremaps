@@ -11,8 +11,8 @@ module.exports = class ContractRoute {
         app.route("/contract")
             .get(ContractController.getContractList)
             .post(ContractController.contract)
-            .put(ContractController.updateContract)
-            .delete(ContractController.deleteContract)
+            .put(ContractController.confirmContract)
+            .delete(ContractController.finishContract)
         
         app.route("/contract/:id_user")
             .get(ContractController.getContractListByUser)

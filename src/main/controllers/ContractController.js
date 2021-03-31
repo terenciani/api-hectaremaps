@@ -9,7 +9,7 @@ module.exports = class ContractController {
       res.status(200).send(await ContractService.getContractList());
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.getContractList " + e.message);
+      global.logger.error("ContractController.getContractList " + e.message);
     }
   } // getContractList()
   
@@ -18,7 +18,7 @@ module.exports = class ContractController {
       res.status(200).send(await ContractService.getContractList(req.params.id_user));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.getContractListByUser " + e.message);
+      global.logger.error("ContractController.getContractListByUser " + e.message);
     }
   } // getContractListByUser()
 
@@ -27,7 +27,7 @@ module.exports = class ContractController {
       res.status(200).send(await ContractService.getContractCurrentByUser(req.params.id_user));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.getContractCurrentByUser " + e.message);
+      global.logger.error("ContractController.getContractCurrentByUser " + e.message);
     }
   } // getContractListByUser()
 
@@ -36,24 +36,24 @@ module.exports = class ContractController {
       res.status(200).send(await ContractService.contract(req.body));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.contract " + e.message);
+      global.logger.error("ContractController.contract " + e.message);
     }
   } // contract()
 
-  static async deleteContract(req, res) {
+  static async finishContract(req, res) {
     try {
-      res.status(200).send(await ContractService.deleteContract(req.body));
+      res.status(200).send(await ContractService.finishContract(req.body));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.deleteContract " + e.message);
+      global.logger.error("ContractController.finishContract " + e.message);
     }
-  } // deleteContract()
-  static async updateContract(req, res) {
+  } // finishContract()
+  static async confirmContract(req, res) {
     try {
-      res.status(200).send(await ContractService.updateContract(req.body));
+      res.status(200).send(await ContractService.confirmContract(req.body));
     } catch (e) {
       res.status(500).send(e.message);
-      global.logger.error("PlanController.updateContract " + e.message);
+      global.logger.error("ContractController.confirmContract " + e.message);
     }
-  } // updateContract()
+  } // confirmContract()
 }; // class
