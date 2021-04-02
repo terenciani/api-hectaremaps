@@ -14,5 +14,8 @@ module.exports = class ImageRoute {
         
         app.route("/uploadvideo")
             .post(ImageController.postVideoSite)
+        
+        app.route("/servicerequest/:id_request")
+            .post(ImageController.postImageRequest)
     } // constructor()
 } // class
