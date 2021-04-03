@@ -15,6 +15,9 @@ module.exports = class RequestRoute {
         app.route("/request/:id_user")
             .get(RequestController.getRequestActivesByUser)
         
+        app.route("/request/all/:id_user")
+            .get(RequestController.getAllUserRequests)
+        
         app.route("/request/images/:id_request")
             .get(RequestController.getImagesByRequest)
         

@@ -24,7 +24,7 @@ class AccessControl {
                 else return res.status(401).send('Acesso não autorizado');
                 
             } catch (error) {
-                res.status(500).send('Falha no servidor');
+                res.status(498).send('Erro ao verificar o token');
                 global.logger.error(
                     `AccessControl: erro ao verificar o token: ${error.message}`
                 )

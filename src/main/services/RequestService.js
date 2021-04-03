@@ -30,6 +30,14 @@ module.exports = class RequestService {
         }
     } // getRequestActivesByUser()
 
+    static async getAllUserRequests(id_user) {
+        try {
+            return await Database("request").where({ fk_user: id_user })
+        } catch (error) {
+            throw new Error("RequestService.getAllUserRequests: " + error);
+        }
+    } // getAllUserRequests()
+
     static async getImagesByRequest(id_request) {
         try {
             return await Database("request_image").where({ fk_request: id_request });

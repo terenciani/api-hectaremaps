@@ -21,6 +21,15 @@ module.exports = class RequestController {
     }
   } // getRequestActivesByUser()
 
+  static async getAllUserRequests(req, res) {
+    try {
+      res.status(200).send(await RequestService.getAllUserRequests(req.params.id_user));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("RequestController.getAllUserRequests " + e.message);
+    }
+  } // getAllUserRequests()
+
   static async getImagesByRequest(req, res) {
     try {
       res.status(200).send(await RequestService.getImagesByRequest(req.params.id_request));
