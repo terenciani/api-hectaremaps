@@ -10,6 +10,7 @@ module.exports = class RequestRoute {
 
         app.route("/request")
             .post(RequestController.createRequest)
+            .delete(RequestController.cancelRequest)
         
         app.route("/request/:id_user")
             .get(RequestController.getRequestActivesByUser)

@@ -29,4 +29,13 @@ module.exports = class RequestController {
       global.logger.error("RequestController.getImagesByRequest " + e.message);
     }
   } // getImagesByRequest()
+
+  static async cancelRequest(req, res) {
+    try {
+      res.status(200).send(await RequestService.cancelRequest(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("RequestController.cancelRequest " + e.message);
+    }
+  } // cancelRequest()
 }; // class

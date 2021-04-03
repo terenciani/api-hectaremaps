@@ -1,7 +1,7 @@
 "use strict";
 
 const Database = require("../database/Connection")
-
+const rimraf = require("rimraf");
 module.exports = class RequestService {
     static async createRequest({ selectedServices, plan }) {
         try {
@@ -49,4 +49,13 @@ module.exports = class RequestService {
             throw new Error("RequestService.postImageRequest: " + error);
         }
     } // postImageRequest()
+
+    static async cancelRequest({ request }) {
+        try {
+            rimraf.sync( `${appRoot}/uploads/request/${request}`);
+            return `${await Database("request").where({ id_request: request }).del()}`
+        } catch (error) {
+            throw new Error("RequestService.cancelRequest: " + error);
+        }
+    } // cancelRequest()
 } // class

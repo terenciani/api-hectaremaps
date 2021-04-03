@@ -20,9 +20,9 @@ const requestStorage = multer.diskStorage({
         fs.mkdirSync(path, { recursive: true })
         return cb(null, path)
     },
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname))
-  }
+    filename: function(req, file, cb) {
+        cb(null, file.originalname)
+    }
 })
         
 const upload = multer({
@@ -30,7 +30,15 @@ const upload = multer({
 }).single('file')
         
 const uploadRequest = multer({
-  storage: requestStorage
+    storage: requestStorage,
+    fileFilter: function (req, file, cb) {
+        let requestId = req.params.id_request;
+        let relativePath = `${appRoot}/uploads/request/${requestId}/${file.originalname}`;
+        if (fs.existsSync(relativePath)) {
+            return cb(new Error('Arquivo já existente!'))
+        }
+        cb(null, true)
+    }
 }).single('file')
 
 module.exports = class ImageService {
@@ -139,15 +147,19 @@ module.exports = class ImageService {
         }
     } // postVideoSite
     static async postImageRequest(req, res) {
-         try {
+        try {
+            
+            let requestId = req.params.id_request;
+            
             uploadRequest(req, res, async function (err) {
                 if (err) {
                     res.status(200).send({ status: 500, message: 'Erro ao enviar o vídeo!' });
                 } else {
-                    await RequestService.postImageRequest(req.file.filename, req.params.id_request)
+                    await RequestService.postImageRequest(req.file.filename, requestId)
                     res.status(200).send({ status: 200, message: 'Arquivo enviado com sucesso!' })
                 }
             })
+            
         } catch (error) {
             throw new Error("ImageService.postImageRequest: " + error);
         }

@@ -18,6 +18,21 @@ module.exports = class ImageController {
       global.logger.error("ImageController.getImage " + e.message);
     }
   } // getImage()
+
+  static async getRequestImage(req, res) {
+    try {
+      let relativePath = `${appRoot}/uploads/request/${req.params.id_request}/${req.params.fileName}`;
+      if(await ImageService.existsImage(relativePath)){
+        res.status(200).sendFile(relativePath)
+      }else{
+        res.status(404).send("Arquivo não encontrado");
+      }     
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("ImageController.getRequestImage " + e.message);
+    }
+  } // getRequestImage()
+
   static async getIcon(req, res) {
     try {
       let siteData = await SiteService.getData();
