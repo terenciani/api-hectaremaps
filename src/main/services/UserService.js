@@ -40,6 +40,30 @@ module.exports = class UserService {
             throw new Error("UserService.delete: " + error);
         }
     } // delete()
+
+    static async registrationUpdate(user) {
+        try {
+            console.log(user)
+            let row = await Database("user").where({ email: user.email }).update({
+                name: user.name,
+                phone: user.phone,
+                lastname: user.lastname,
+                cpf: user.cpf,
+                cep: user.cep,
+                address: user.address,
+                number: user.number,
+                complement: user.complement,
+                district: user.district,
+                city: user.city,
+                uf: user.uf,
+                status: 'ACTIVE',
+            });
+            return row >=1 ? "Atualização realizada com sucesso!" : "Não foi possível atualizar esse registro."
+        } catch (error) {
+            throw new Error("UserService.registrationUpdate: " + error);
+        }
+    } // registrationUpdate()
+
     static async create({ name, lastname, email, phone, password }) {
         try {
             let row = await Database("user").insert({

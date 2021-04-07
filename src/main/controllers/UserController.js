@@ -11,6 +11,14 @@ module.exports = class UserController {
       global.logger.error("UserController.getAll " + e.message);
     }
   } // getAll()
+  static async getUserData(req, res) {
+    try {        
+      res.status(200).send(await UserService.findById(req.params.id_user));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("UserController.getUserData " + e.message);
+    }
+  } // getUserData()
   static async delete(req, res) {
     try {
       if (!req.body.id_user)
@@ -38,4 +46,12 @@ module.exports = class UserController {
       global.logger.error("UserController.update " + e.message);
     }
   } // update()
+  static async registrationUpdate(req, res) {
+    try {
+      res.status(200).send(await UserService.registrationUpdate(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("UserController.registrationUpdate " + e.message);
+    }
+  } // registrationUpdate()
 }; // class

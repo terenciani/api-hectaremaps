@@ -12,5 +12,11 @@ module.exports = class UserRoute {
             .delete(accessAdmin.verify, UserController.delete)
             .post(accessAdmin.verify, UserController.create)
             .put(accessAdmin.verify, UserController.update)
+        
+        app.route("/users/:id_user")
+            .get(UserController.getUserData)
+
+        app.route("/users/registration")
+            .put(UserController.registrationUpdate)
     } // constructor()
 } // class
