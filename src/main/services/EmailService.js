@@ -2,20 +2,31 @@
 
 const nodemailer = require('nodemailer');
 const TokenUtil = require("../utils/TokenUtil");
-
-const transporter = nodemailer.createTransport({
-    name: process.env.MAIL_USER,
-    host: process.env.MAIL_HOST,
-    port: process.env.MAIL_PORT,
-    secure: process.env.MAIL_SECURE,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
-    },
-    tls: { rejectUnauthorized: process.env.MAIL_TLS }
-});
+const { mail, api, company } = require("./../../../configuration.json");
 
 module.exports = class EmailService {
+    static async send(subject, message, to = undefined) {
+        let mailOptions = {
+            from: mail.user,
+            to: to ? to : mail.to,
+            subject: subject,
+            html: message
+        };
+
+        let transporter = nodemailer.createTransport({
+            name: mail.user,
+            host: mail.host,
+            port: mail.port,
+            secure: mail.secure,
+            auth: {
+                user: mail.user,
+                pass: mail.password
+            },
+            tls: { rejectUnauthorized: mail.tls }
+        });
+        return await transporter.sendMail(mailOptions)
+    } // enviar
+
     static async contactNotify(data) {
         try {
             await this.notifyAdmin(data, "CONTACT")
@@ -45,6 +56,15 @@ module.exports = class EmailService {
         }
     } // recoveryNotify()
 
+    static emailUpdateNotify(data) {
+        try {
+            this.notifyClient(data, "EMAILUPDATE")
+            return
+        } catch (error) {
+            throw new Error("EmailService.emailUpdateNotify: " + error);
+        }
+    } // emailUpdateNotify()
+
     static async notifyAdmin(data, type){
         let subject = "";
         let message = "";
@@ -58,44 +78,37 @@ module.exports = class EmailService {
                 message = this.adminContactMessage(data);
             break;
         }
-        let mailOptions = {
-            from: process.env.MAIL_USER,
-            to: process.env.MAIL_TO,
-            subject: subject,
-            html: message
-        };
         try {
-            return transporter.sendMail(mailOptions)
+            return this.send(subject, message)
         } catch (error) {
             throw new Error("EmailService.notifyAdministrator: " + error);
         }
     } //notifyAdmin
 
-    static async notifyClient(data, type){
+    static async notifyClient(data, type) {
         let subject = "";
         let message = "";
+        console.log(data)
         switch(type){
             case 'REGISTER':
-                subject = `[${process.env.COMPANY.toUpperCase()}] Confirmação de registro`;
+                subject = `[${company.toUpperCase()}] Confirmação de registro`;
                 message = this.clientRegisterMessage(data);
             break;
             case 'CONTACT':
-                subject = `[${process.env.COMPANY.toUpperCase()}] Confirmação de Recebimento`
+                subject = `[${company.toUpperCase()}] Confirmação de Recebimento`
                 message = this.clientContactMessage(data);
             break;
             case 'RECOVERY':
-                subject = `[${process.env.COMPANY.toUpperCase()}] Recuperação de senha`
+                subject = `[${company.toUpperCase()}] Recuperação de senha`
                 message = this.clientRecoveryMessage(data);
+                break;
+            case 'EMAILUPDATE':
+                subject = `[${company.toUpperCase()}] Atualização do e-mail`
+                message = this.clientUpdateEmailMessage(data);
             break;
         }
-        let mailOptions = {
-            from: process.env.MAIL_USER,
-            to: data.email,
-            subject: subject,
-            html: message
-        };
         try {
-            return transporter.sendMail(mailOptions)
+            return this.send(subject, message, data.email)
         } catch (error) {
             throw new Error("EmailService.notifyClient: " + error);
         }
@@ -106,26 +119,37 @@ module.exports = class EmailService {
         <p>Agradeçemos sua visita e a oportunidade de recebermos o seu contato. </p>
         <p>Em até 48 horas você receberá no e-mail fornecido a resposta para sua questão. </p>
         <p>Atenciosamente,</p>
-        <p>${process.env.COMPANY}</p>
+        <p>${company}</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>`
     } //clientContactMessage
 
     static clientRecoveryMessage(data){
-        return `h2>Solicitação de recuperação de senha</h2>
+        return `<h2>Solicitação de recuperação de senha</h2>
         <p>Senha: ${data.temp_password}</p>
-        <p>Se vcê não fez essa solicitação, basta ignorar este e-mail.</p>
+        <p>Se você não fez essa solicitação, basta ignorar este e-mail.</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>
-        <p>${process.env.COMPANY}</p>`;
+        <p>${company}</p>`;
     } //clientRecoveryMessage
 
     static clientRegisterMessage(data) {
         let token = TokenUtil.genereteToken({ name: data.name, email: data.email, id_user: data.id_user, role: data.role });
 
         return `<p>Olá <strong> ${data.name}</strong>.</p>
-        <p>Você acabou de realizar seu registro na ${process.env.COMPANY} usando esta conta de e-mail.</p>
-        <a href='${process.env.API}/emailconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
+        <p>Você acabou de realizar seu registro na ${company} usando esta conta de e-mail.</p>
+        <a href='${api}/emailconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
         <p>Atenciosamente,</p>
-        <p>${process.env.COMPANY}</p>
+        <p>${company}</p>
+        <p>Observação - Não é necessário responder esta mensagem.</p>`
+    } //clientRegisterMessage
+
+    static clientUpdateEmailMessage(data) {
+        let token = TokenUtil.genereteToken({ name: data.name, email: data.email, newEmail: data.newEmail, id_user: data.id_user, role: data.role });
+
+        return `<p>Olá <strong> ${data.name}</strong>.</p>
+        <p>Você acabou de alterar seu e-mail na ${company} usando esta conta de e-mail.</p>
+        <a href='${api}/emailupdateconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
+        <p>Atenciosamente,</p>
+        <p>${company}</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>`
     } //clientRegisterMessage
 

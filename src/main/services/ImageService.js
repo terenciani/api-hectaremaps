@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path');
 const multer = require('multer');
-const SiteService = require("./SiteService");
+const ConfigService = require("./ConfigService");
 const RequestService = require('./RequestService');
  
 const siteStorage = multer.diskStorage({
@@ -65,7 +65,7 @@ module.exports = class ImageService {
                     if (err) {
                         res.status(200).send({ status: 500, message: 'Erro ao enviar a imagem!' });
                     } else {
-                        let siteData = await SiteService.getData();
+                        let siteData = await ConfigService.getData();
                         let fileName = siteData.icon.logo
                         let relativePath = `./assets/${fileName}`
                         if (fs.existsSync(relativePath)) {
@@ -75,7 +75,7 @@ module.exports = class ImageService {
                             })
                         }
                         siteData.icon.logo = req.file.filename
-                        await SiteService.setData(siteData);
+                        await ConfigService.setData(siteData);
                         res.status(200).send({ status: 200, message: 'Imagem atualizada com sucesso!' })
                     }
                 })
@@ -84,7 +84,7 @@ module.exports = class ImageService {
                     if (err) {
                         res.status(200).send({ status: 500, message: 'Erro ao enviar a imagem!' });
                     } else {
-                        let siteData = await SiteService.getData();
+                        let siteData = await ConfigService.getData();
                         let fileName = siteData.icon.favicon
                         let relativePath = `./assets/${fileName}`
                         if (fs.existsSync(relativePath)) {
@@ -94,7 +94,7 @@ module.exports = class ImageService {
                             })
                         }
                         siteData.icon.favicon = req.file.filename
-                        await SiteService.setData(siteData);
+                        await ConfigService.setData(siteData);
                         res.status(200).send({ status: 200, message: 'Imagem atualizada com sucesso!' })
                     }
                 })
@@ -103,7 +103,7 @@ module.exports = class ImageService {
                     if (err) {
                         res.status(200).send({ status: 500, message: 'Erro ao enviar a imagem!' });
                     } else {
-                        let siteData = await SiteService.getData();
+                        let siteData = await ConfigService.getData();
                         let fileName = siteData[area].background
                         let relativePath = `./assets/${fileName}`
                         if (fs.existsSync(relativePath)) {
@@ -113,7 +113,7 @@ module.exports = class ImageService {
                             })
                         }
                         siteData[area].background = req.file.filename
-                        await SiteService.setData(siteData);
+                        await ConfigService.setData(siteData);
                         res.status(200).send({ status: 200, message: 'Imagem atualizada com sucesso!' })
                     }
                 })
@@ -128,7 +128,7 @@ module.exports = class ImageService {
                 if (err) {
                     res.status(200).send({ status: 500, message: 'Erro ao enviar o vídeo!' });
                 } else {
-                    let siteData = await SiteService.getData();
+                    let siteData = await ConfigService.getData();
                     let fileName = siteData.video.src
                     let relativePath = `./assets/${fileName}`
                     if (fs.existsSync(relativePath)) {
@@ -138,7 +138,7 @@ module.exports = class ImageService {
                         })
                     }
                     siteData.video.src = req.file.filename
-                    await SiteService.setData(siteData);
+                    await ConfigService.setData(siteData);
                     res.status(200).send({ status: 200, message: 'Vídeo atualizado com sucesso!' })
                 }
             })

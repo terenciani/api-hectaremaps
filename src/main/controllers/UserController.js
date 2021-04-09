@@ -1,5 +1,6 @@
 "use strict";
 
+const RegisterService = require("../services/RegisterService");
 const UserService = require("../services/UserService");
 
 module.exports = class UserController {
@@ -54,4 +55,13 @@ module.exports = class UserController {
       global.logger.error("UserController.registrationUpdate " + e.message);
     }
   } // registrationUpdate()
+
+  static async emailUpdate(req, res) {
+    try {
+      res.status(200).send(await RegisterService.emailUpdate(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error("UserController.emailUpdate " + e.message);
+    }
+  } // emailUpdate()
 }; // class

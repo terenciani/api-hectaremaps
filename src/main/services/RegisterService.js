@@ -6,6 +6,7 @@ const TokenUtil = require("../utils/TokenUtil");
 const generator = require('generate-password');
 const Database = require("../database/Connection");
 const UserService = require("../services/UserService");
+const { mail, api, admin } = require("../../../configuration.json");
 
 module.exports = class RegisterService {
     static async signUp(data) {
@@ -86,12 +87,66 @@ module.exports = class RegisterService {
             user.temp_password = password
             EmailService.recoveryNotify(user)
 
-            return { status: 200, message: "Pedido de registro realizado! Você receberá a senha no e-mail informado." }
+            return { status: 200, message: "Solicitação realizada! Você receberá a senha no e-mail informado." }
 
         } catch (error) {
             throw new Error("RegisterService.recovery: " + error);
         }
     } // recovery()
+
+    static async emailUpdate(userData) {
+        try {
+            let user = await Database("user").where({ email: userData.newEmail }).first()
+
+            if (user && user.id_user)
+                return { status: 422, message: "E-mail vinculado a outro cadastro!" }
+
+            EmailService.emailUpdateNotify(userData)
+
+            return { status: 200, message: "Pedido de registro realizado! Você receberá a senha no e-mail informado." }
+        } catch (error) {
+            throw new Error("RegisterService.emailUpdate: " + error);
+        }
+    } // emailUpdate()
+
+    static async emailUpdateConfirm(token) {
+        try {
+            let data = TokenUtil.decodeToken(token);
+            
+            console.log(data)
+
+            if (!data || !data.user)
+                return {message: `<h1 style="text-align: center">Não foi possível validar este e-mail. Entre em contato conosco!` }
+
+            let user = await Database("user").where({ email: data.user.email }).first()
+
+            if (!user || !user.id_user)
+                return { message: `<h1 style="text-align: center">E-mail não encontrado!</h1>` }
+            
+            if (user.status == "BLOCKED")
+                return { message: `<h1 style="text-align: center">Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!</h1>` }
+            
+            if (user.email == data.user.newEmail)
+                return {
+                    message: `<div style="text-align: center;">
+                                <h1>Este e-mail já foi confirmado!</h1>
+                                <a href='${admin}'>Clique aqui para realizar o login. </a>
+                            </div>` }
+            
+            await Database("user").where({ email: user.email }).update({
+                email: data.user.newEmail
+            })
+
+            return {
+                message: `<div style="text-align: center;">
+                                <h1>E-mail confirmado com sucesso!</h1>
+                                <a href='${admin}'>Clique aqui para realizar o login. </a>
+                            </div>` }
+
+        } catch (error) {
+            throw new Error("RegisterService.emailUpdateConfirm: " + error);
+        }
+    } // emailUpdateConfirm()
 
     static async emailConfirm(token) {
         try {
@@ -107,12 +162,11 @@ module.exports = class RegisterService {
             
             if (user.status == "BLOCKED")
                 return { message: `<h1 style="text-align: center">Por motivo de segurança seu usuário está bloqueado. Entre em contato conosco!</h1>` }
-            
             if (user.status == "ACTIVE")
                 return {
                     message: `<div style="text-align: center;">
                                 <h1>Este e-mail já foi confirmado!</h1>
-                                <a href='${process.env.ADMIN}'>Clique aqui para realizar o login. </a>
+                                <a href='${admin}'>Clique aqui para realizar o login. </a>
                             </div>` }
             
             await Database("user").where({ email: user.email }).update({
@@ -123,7 +177,7 @@ module.exports = class RegisterService {
             return {
                 message: `<div style="text-align: center;">
                                 <h1>E-mail confirmado com sucesso!</h1>
-                                <a href='${process.env.ADMIN}'>Clique aqui para realizar o login. </a>
+                                <a href='${admin}'>Clique aqui para realizar o login. </a>
                             </div>` }
 
         } catch (error) {

@@ -1,7 +1,7 @@
 "use strict";
 
 const ImageService = require("../services/ImageService");
-const SiteService = require("../services/SiteService");
+const ConfigService = require("../services/ConfigService");
 
 
 module.exports = class ImageController {
@@ -35,7 +35,7 @@ module.exports = class ImageController {
 
   static async getIcon(req, res) {
     try {
-      let siteData = await SiteService.getData();
+      let siteData = await ConfigService.getData();
       let relativePath = appRoot  + '/assets/' + siteData.icon[req.params.area]
       if(await ImageService.existsImage(relativePath)){
         res.status(200).sendFile(relativePath)

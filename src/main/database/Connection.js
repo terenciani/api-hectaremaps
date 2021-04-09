@@ -1,12 +1,8 @@
-const knex = require('knex')({
-  client: 'mysql2',
-  connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-  }
-});
+const ConfigService = require("./../services/ConfigService");
+
+const { database } = require("./../../../configuration.json");
+
+const knex = require('knex')(database);
 /*
 knex.on( 'query', function( queryData ) {
     console.log( queryData.sql );

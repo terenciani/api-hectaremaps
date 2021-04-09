@@ -18,5 +18,8 @@ module.exports = class UserRoute {
 
         app.route("/users/registration")
             .put(UserController.registrationUpdate)
+        
+        app.route("/emailupdate")
+            .post(UserController.emailUpdate)
     } // constructor()
 } // class
