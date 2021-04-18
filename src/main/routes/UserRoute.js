@@ -1,7 +1,7 @@
 'use strict';
 const AccessControl = require('../middlewares/AccessControl');
 
-// const access = new AccessControl('USER')
+const access = new AccessControl('USER');
 const accessAdmin = new AccessControl('ADMIN');
 
 const UserController = require('../controllers/UserController');
@@ -14,12 +14,16 @@ module.exports = class UserRoute {
       .post(accessAdmin.verify, UserController.create)
       .put(accessAdmin.verify, UserController.update);
 
-    app.route('/users/:id_user').get(UserController.getUserData);
+    app.route('/users/:id_user').get(access.verify, UserController.getUserData);
 
-    app.route('/users/registration').put(UserController.registrationUpdate);
+    app
+      .route('/users/registration')
+      .put(access.verify, UserController.registrationUpdate);
 
-    app.route('/emailupdate').post(UserController.emailUpdate);
+    app.route('/emailupdate').post(access.verify, UserController.emailUpdate);
 
-    app.route('/passwordupdate').post(UserController.passwordUpdate);
+    app
+      .route('/passwordupdate')
+      .post(access.verify, UserController.passwordUpdate);
   } // constructor()
 }; // class
