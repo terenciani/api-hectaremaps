@@ -1,25 +1,43 @@
-"use strict";
+'use strict';
 
-require('dotenv').config()
+require('dotenv').config();
 
 require('./src/main/services/LoggerService');
 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 const BodyParser = require('body-parser');
 const Loader = require('./Loader');
-const Server = require('./Server'); 
-
-
+const Server = require('./Server');
 
 class App {
+  static async init() {
+    let app = new Server();
 
-    static async init() {
-        
-        let app = new Server();
+    const swaggerOptions = {
+      definition: {
+        openapi: '3.0.0',
+        info: {
+          title: 'HectareMaps API',
+          version: '1.0.0',
+          description: 'Documentação da API do HectareMaps',
+        },
+        servers: [
+          {
+            url: 'http://localhost:3000',
+          },
+        ],
+      },
+      apis: ['./src/main/routes/*.js'],
+    };
 
-        /*var linksPermitidos = ['http://front-associacao.herokuapp.com','https://front-associacao.herokuapp.com', 'http://localhost:3000','https://localhost:3000', 'https://localhost:3001', 'http://localhost:3001']
+    const specs = swaggerJsDoc(swaggerOptions);
+
+    app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
+    /*var linksPermitidos = ['http://front-associacao.herokuapp.com','https://front-associacao.herokuapp.com', 'http://localhost:3000','https://localhost:3000', 'https://localhost:3001', 'http://localhost:3001']
         var corsOptions = {
         origin: function (origin, callback) {
             if (linksPermitidos.indexOf(origin) !== -1) {
@@ -32,8 +50,8 @@ class App {
 
 
         */
-        app.use(cors());
-        /*  
+    app.use(cors());
+    /*  
         try {
             global.logger.info("Obtendo conexão com o banco de dados...");
             await ConnectionFactory.getConnection();
@@ -43,40 +61,42 @@ class App {
             process.exit(1);
         } */
 
-        app.use('/uploads', express.static('uploads'));
+    app.use('/uploads', express.static('uploads'));
 
-        global.appRoot = path.resolve(__dirname);
+    global.appRoot = path.resolve(__dirname);
 
-        // parse requests of content-type - application/json
-        app.use(BodyParser.json({
-            limit: '50mb'
-        }));
+    // parse requests of content-type - application/json
+    app.use(
+      BodyParser.json({
+        limit: '50mb',
+      })
+    );
 
-        // parse requests of content-type - application/x-www-form-urlencoded
-        app.use(BodyParser.urlencoded({
-            limit: '50mb',
-            extended: true
-        }));
+    // parse requests of content-type - application/x-www-form-urlencoded
+    app.use(
+      BodyParser.urlencoded({
+        limit: '50mb',
+        extended: true,
+      })
+    );
 
-        Loader.loadAll(app);
+    Loader.loadAll(app);
 
-        
+    // simple route
+    app.get('/', (req, res) => {
+      res.json({
+        project: 'API HectareMaps',
+        version: 'beta',
+        author: 'Marcelo Figueiredo Terenciani',
+      });
+    });
 
-        // simple route
-        app.get('/', (req, res) => {
-            res.json({
-                project: "API HectareMaps",
-                version: "beta",
-                author: "Marcelo Figueiredo Terenciani"
-            });
-        })
-        
-        // set port, listen for requests
-        const PORT = process.env.PORT || 3000;
-        app.listen(PORT, () => {
-            global.logger.success(`API HectareMaps ${PORT}`);
-        });
-    }
+    // set port, listen for requests
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      global.logger.success(`API HectareMaps ${PORT}`);
+    });
+  }
 }
 
 App.init();
