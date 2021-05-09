@@ -10,12 +10,19 @@ class AccessControl {
       if (!token) return res.status(400).send('Token não fornecido');
 
       try {
-        const { user } = decodeToken(token);
+        const { user, iat } = decodeToken(token);
 
         if (!user || !user.id_user)
           return res.status(401).send('Acesso não autorizado: Token inválido');
 
-        const { role } = await UserService.findById(user.id_user);
+        let { role, require_auth } = await UserService.findById(user.id_user);
+
+        if (iat * 1000 < require_auth.getTime())
+          res
+            .status(498)
+            .send(
+              'Foram realizadas alterações no seu perfil. Por favor, faça login novamente!'
+            );
 
         if (!role) return res.status(401).send('Acesso não autorizado');
 

@@ -74,10 +74,26 @@ module.exports = class RequestController {
   } // cancelRequest()
   static async update(req, res) {
     try {
-      res.status(200).send(await RequestService.update(req.body));
+      res
+        .status(200)
+        .send(
+          await RequestService.updateStatus(
+            req.body.id_request,
+            req.body.status
+          )
+        );
     } catch (e) {
       res.status(500).send(e.message);
       global.logger.error('RequestController.update ' + e.message);
     }
   } // update()
+
+  static async getFileZip(req, res) {
+    try {
+      await RequestService.getFileZip(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('RequestService.getFileZip ' + e.message);
+    }
+  } // getFileZip()
 }; // class

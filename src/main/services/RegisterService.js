@@ -167,7 +167,7 @@ module.exports = class RegisterService {
         };
 
       let user = await Database('user')
-        .where({ email: data.user.email })
+        .where({ email: data.user.email, require_auth: new Date() })
         .first();
 
       if (!user || !user.id_user)

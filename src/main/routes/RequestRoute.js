@@ -21,6 +21,9 @@ module.exports = class RequestRoute {
     app
       .route('/request/data/:id_request')
       .get(RequestController.getRequestData);
+
+    app.route('/request/zip/:id_request').get(RequestController.getFileZip);
+
     app
       .route('/request/all/:id_user')
       .get(RequestController.getAllUserRequests);

@@ -25,6 +25,18 @@ const requestStorage = multer.diskStorage({
   },
 });
 
+const reportStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const id = req.params.id_request;
+    const path = `./uploads/request/${id}`;
+    fs.mkdirSync(path, { recursive: true });
+    return cb(null, path);
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'report.pdf');
+  },
+});
+
 const upload = multer({
   storage: siteStorage,
 }).single('file');
@@ -36,6 +48,21 @@ const uploadRequest = multer({
     let relativePath = `${appRoot}/uploads/request/${requestId}/${file.originalname}`;
     if (fs.existsSync(relativePath)) {
       return cb(new Error('Arquivo já existente!'));
+    }
+    cb(null, true);
+  },
+}).single('file');
+
+const uploadReport = multer({
+  storage: reportStorage,
+  fileFilter: function (req, file, cb) {
+    let requestId = req.params.id_request;
+    let relativePath = `${appRoot}/uploads/request/${requestId}/report.pdf`;
+    if (fs.existsSync(relativePath)) {
+      fs.unlink(relativePath, (error) => {
+        if (error) console.log(error);
+        return;
+      });
     }
     cb(null, true);
   },
@@ -53,12 +80,10 @@ module.exports = class ImageService {
 
   static async postImageSite(req, res) {
     if (!req.params.area)
-      res
-        .status(500)
-        .send({
-          status: 500,
-          message: 'Erro interno! A seção deve ser informada.',
-        });
+      res.status(500).send({
+        status: 500,
+        message: 'Erro interno! A seção deve ser informada.',
+      });
 
     try {
       var area = req.params.area;
@@ -185,4 +210,23 @@ module.exports = class ImageService {
       throw new Error('ImageService.postImageRequest: ' + error);
     }
   } // postImageRequest
+
+  static async postReport(req, res) {
+    try {
+      uploadReport(req, res, async function (err) {
+        if (err) {
+          res
+            .status(200)
+            .send({ status: 500, message: 'Erro ao enviar o arquivo!' });
+        } else {
+          await RequestService.updateStatus(req.params.id_request, 'ATTACHED');
+          res
+            .status(200)
+            .send({ status: 200, message: 'Relatório enviado com sucesso!' });
+        }
+      });
+    } catch (error) {
+      throw new Error('ImageService.postReport: ' + error);
+    }
+  } // postReport
 }; // class

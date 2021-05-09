@@ -1,7 +1,10 @@
 'use strict';
 
+const fs = require('fs');
 const Database = require('../database/Connection');
 const rimraf = require('rimraf');
+const zip = require('express-zip');
+
 module.exports = class RequestService {
   static async getAllRequests() {
     try {
@@ -110,12 +113,13 @@ module.exports = class RequestService {
       throw new Error('RequestService.cancelRequest: ' + error);
     }
   } // cancelRequest()
-  static async update(request) {
+
+  static async updateStatus(requestId, status) {
     try {
       let row = await Database('request')
-        .where({ id_request: request.id_request })
+        .where({ id_request: requestId })
         .update({
-          status: request.status,
+          status: status,
           update_at: new Date(),
         });
       return row >= 1
@@ -125,4 +129,29 @@ module.exports = class RequestService {
       throw new Error('RequestService.update: ' + error);
     }
   } // update()
+
+  static async getFileZip(req, res) {
+    try {
+      let requestId = req.params.id_request;
+      let imagesDB = await Database('request_image').select('filename').where({
+        fk_request: requestId,
+      });
+
+      let imagesDIR = [];
+
+      for (let i = 0; i < imagesDB.length; i++) {
+        let relativePath = `${appRoot}/uploads/request/${requestId}/${imagesDB[i].filename}`;
+        if (fs.existsSync(relativePath)) {
+          imagesDIR.push({
+            path: relativePath,
+            name: imagesDB[i].filename,
+          });
+        }
+      }
+
+      res.zip(imagesDIR);
+    } catch (error) {
+      throw new Error('RequestService.getFileZip: ' + error);
+    }
+  }
 }; // class
