@@ -10,6 +10,7 @@ module.exports = class RequestRoute {
     app
       .route('/request')
       .get(RequestController.getAllRequests)
+      .put(RequestController.update)
       .post(RequestController.createRequest)
       .delete(RequestController.cancelRequest);
 

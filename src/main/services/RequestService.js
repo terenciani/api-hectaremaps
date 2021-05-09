@@ -110,4 +110,19 @@ module.exports = class RequestService {
       throw new Error('RequestService.cancelRequest: ' + error);
     }
   } // cancelRequest()
+  static async update(request) {
+    try {
+      let row = await Database('request')
+        .where({ id_request: request.id_request })
+        .update({
+          status: request.status,
+          update_at: new Date(),
+        });
+      return row >= 1
+        ? 'Atualização realizada com sucesso!'
+        : 'Não foi possível atualizar esse registro.';
+    } catch (error) {
+      throw new Error('RequestService.update: ' + error);
+    }
+  } // update()
 }; // class

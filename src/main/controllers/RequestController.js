@@ -72,4 +72,12 @@ module.exports = class RequestController {
       global.logger.error('RequestController.cancelRequest ' + e.message);
     }
   } // cancelRequest()
+  static async update(req, res) {
+    try {
+      res.status(200).send(await RequestService.update(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('RequestController.update ' + e.message);
+    }
+  } // update()
 }; // class
