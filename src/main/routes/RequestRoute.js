@@ -22,9 +22,7 @@ module.exports = class RequestRoute {
       .route('/request/data/:id_request')
       .get(access.verify, RequestController.getRequestData);
 
-    app
-      .route('/request/zip/:id_request')
-      .get(accessAdmin.verify, RequestController.getFileZip);
+    app.route('/request/zip/:id_request').get(RequestController.getFileZip);
 
     app
       .route('/request/all/:id_user')
