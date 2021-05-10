@@ -35,6 +35,7 @@ module.exports = class UserService {
         phone: user.phone,
         email: user.email,
         role: user.role,
+        require_auth: new Date(),
         status: user.status,
       });
       return row >= 1

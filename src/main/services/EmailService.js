@@ -156,8 +156,8 @@ module.exports = class EmailService {
     });
 
     return `<p>Olá <strong> ${data.name}</strong>.</p>
-        <p>Você acabou de alterar seu e-mail na ${company} usando esta conta de e-mail.</p>
-        <a href='${api}/emailupdateconfirm/${token}' target='_blank'>Clique aqui para confirmar seu e-mail</a> <br />
+        <p>Você acabou de alterar seu e-mail na ${company} para <strong>${data.newEmail}.</p>
+        <a href='${api}/emailupdateconfirm/${token}' target='_blank'>Clique aqui para confirmar a alteração para o novo e-mail</a> <br />
         <p>Atenciosamente,</p>
         <p>${company}</p>
         <p>Observação - Não é necessário responder esta mensagem.</p>`;

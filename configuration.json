@@ -8,7 +8,7 @@
     "title": "Hectare Maps",
     "subtitle": "Plataforma de processamento de imagens com drones",
     "background": "1616281747075.jpeg",
-    "position": "top",
+    "position": "end",
     "shownavigationlogo": true,
     "showlogo": true
   },
@@ -43,8 +43,8 @@
   },
   "api": "https://hectaremaps-api.herokuapp.com",
   "admin": "https://hectaremaps-admin.herokuapp.com",
-  "company": "HectareMaps",
-  "database":{
+  "company": "HectareMaps Alterado Pelo Site B",
+  "database": {
     "client": "mysql2",
     "connection": {
       "host": "www.terenciani.com.br",
@@ -53,17 +53,17 @@
       "database": "teren671_hectar77_banco"
     }
   },
-  "jwt":{
+  "jwt": {
     "secret": "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTYxNTY3NDQwMiwiaWF0IjoxNjE1Njc0NDAyfQ.IshENsD31U37x-Kk-aQ0692Q929gEt9Jz16TGvDbGDU",
     "expiresIn": "3h"
   },
-  "mail":{
-    "host":"mail.terenciani.com.br",
+  "mail": {
+    "host": "mail.terenciani.com.br",
     "port": 465,
-    "secure":true,
-    "user":"no-reply@terenciani.com.br",
-    "password":"t3st32o2i",
-    "to":"marcelo.terenciani@gmail.com",
-    "tls":false
+    "secure": true,
+    "user": "no-reply@terenciani.com.br",
+    "password": "t3st32o2i",
+    "to": "marcelo.terenciani@gmail.com",
+    "tls": false
   }
 }

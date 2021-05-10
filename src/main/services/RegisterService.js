@@ -148,7 +148,7 @@ module.exports = class RegisterService {
       return {
         status: 200,
         message:
-          'Pedido de registro realizado! Você receberá a senha no e-mail informado.',
+          'Pedido realizado! Você receberá um link de confirmação no e-mail atual.',
       };
     } catch (error) {
       throw new Error('RegisterService.emailUpdate: ' + error);
@@ -167,7 +167,7 @@ module.exports = class RegisterService {
         };
 
       let user = await Database('user')
-        .where({ email: data.user.email, require_auth: new Date() })
+        .where({ email: data.user.email })
         .first();
 
       if (!user || !user.id_user)
@@ -190,6 +190,7 @@ module.exports = class RegisterService {
 
       await Database('user').where({ email: user.email }).update({
         email: data.user.newEmail,
+        require_auth: new Date(),
       });
 
       return {

@@ -1,7 +1,7 @@
 'use strict';
 const AccessControl = require('../middlewares/AccessControl');
 
-// const access = new AccessControl('USER')
+const access = new AccessControl('USER');
 const accessAdmin = new AccessControl('ADMIN');
 
 const RequestController = require('../controllers/RequestController');
@@ -9,24 +9,26 @@ module.exports = class RequestRoute {
   constructor(app) {
     app
       .route('/request')
-      .get(RequestController.getAllRequests)
-      .put(RequestController.update)
-      .post(RequestController.createRequest)
-      .delete(RequestController.cancelRequest);
+      .get(accessAdmin.verify, RequestController.getAllRequests)
+      .put(access.verify, RequestController.update)
+      .post(access.verify, RequestController.createRequest)
+      .delete(access.verify, RequestController.cancelRequest);
 
     app
       .route('/request/:id_user')
-      .get(RequestController.getRequestActivesByUser);
+      .get(access.verify, RequestController.getRequestActivesByUser);
 
     app
       .route('/request/data/:id_request')
-      .get(RequestController.getRequestData);
+      .get(access.verify, RequestController.getRequestData);
 
-    app.route('/request/zip/:id_request').get(RequestController.getFileZip);
+    app
+      .route('/request/zip/:id_request')
+      .get(accessAdmin.verify, RequestController.getFileZip);
 
     app
       .route('/request/all/:id_user')
-      .get(RequestController.getAllUserRequests);
+      .get(access.verify, RequestController.getAllUserRequests);
 
     app
       .route('/request/images/:id_request')
