@@ -1,6 +1,7 @@
 'use strict';
 
 const ImageService = require('../services/ImageService');
+const BlobService = require('../services/BlobService');
 const ConfigService = require('../services/ConfigService');
 
 module.exports = class ImageController {
@@ -72,6 +73,15 @@ module.exports = class ImageController {
     }
   } // postImageRequest()
 
+  static async postBlobRequest(req, res) {
+    try {
+      await BlobService.postBlobRequest(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('ImageController.postBlobRequest ' + e.message);
+    }
+  } // postBlobRequest()
+
   static async postReport(req, res) {
     try {
       await ImageService.postReport(req, res);
@@ -80,4 +90,21 @@ module.exports = class ImageController {
       global.logger.error('ImageController.postReport ' + e.message);
     }
   } // postReport()
+
+  static async postBlobReport(req, res) {
+    try {
+      await BlobService.postBlobReport(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('ImageController.postBlobReport ' + e.message);
+    }
+  } // postBlobReport()
+
+  static async getAzureBlob(req, res) {
+    try {
+      await BlobService.getAzureBlob(req, res);
+    } catch (e) {
+      global.logger.error('ImageController.getAzureBlob ' + e.message);
+    }
+  } // getAzureBlob()
 }; // class

@@ -14,6 +14,16 @@ module.exports = class RequestService {
     }
   } // getAllRequests()
 
+  static async existImage(requestId, filename) {
+    try {
+      return await Database('request_image')
+        .where({ fk_request: requestId })
+        .andWhere({ filename: filename });
+    } catch (error) {
+      throw new Error('RequestService.getAllRequests: ' + error);
+    }
+  } // getAllRequests()
+
   static async getRequestData(id_request) {
     try {
       let request = await Database('request')
@@ -48,11 +58,12 @@ module.exports = class RequestService {
     }
   } // getRequestData()
 
-  static async createRequest({ selectedServices, plan }) {
+  static async createRequest({ selectedServices, plan, description }) {
     try {
       let id = await Database('request').insert({
         fk_plan: plan.fk_plan,
         fk_user: plan.fk_user,
+        description: description,
         create_at: new Date(),
       });
       for (let i = 0; i < selectedServices.length; i++) {

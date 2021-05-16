@@ -13,7 +13,7 @@ module.exports = class ImageRoute {
     // transformar em rota privada
     app
       .route('/upload/request/:id_request/:fileName')
-      .get(ImageController.getRequestImage);
+      .get(ImageController.getAzureBlob);
 
     app
       .route('/upload/:area')
@@ -26,8 +26,12 @@ module.exports = class ImageRoute {
     app
       .route('/servicerequest/:id_request')
       .post(access.verify, ImageController.postImageRequest);
+
+    app
+      .route('/servicerequest/big/:id_request')
+      .post(access.verify, ImageController.postBlobRequest);
     app
       .route('/upload/report/:id_request')
-      .post(accessAdmin.verify, ImageController.postReport);
+      .post(accessAdmin.verify, ImageController.postBlobReport);
   } // constructor()
 }; // class

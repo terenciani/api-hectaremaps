@@ -1,6 +1,7 @@
 'use strict';
 
 const RequestService = require('../services/RequestService');
+const BlobService = require('../services/BlobService');
 
 module.exports = class RequestController {
   static async getAllRequests(req, res) {
@@ -66,12 +67,22 @@ module.exports = class RequestController {
 
   static async cancelRequest(req, res) {
     try {
+      res.status(200).send(await BlobService.cancelRequest(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('RequestController.cancelRequest ' + e.message);
+    }
+  } // cancelRequest()
+
+  static async cancelRequestOld(req, res) {
+    try {
       res.status(200).send(await RequestService.cancelRequest(req.body));
     } catch (e) {
       res.status(500).send(e.message);
       global.logger.error('RequestController.cancelRequest ' + e.message);
     }
   } // cancelRequest()
+
   static async update(req, res) {
     try {
       res
