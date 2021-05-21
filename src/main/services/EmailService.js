@@ -2,27 +2,26 @@
 
 const nodemailer = require('nodemailer');
 const TokenUtil = require('../utils/TokenUtil');
-const { mail, api, company } = require('./../../../configuration.json');
+const { api, company } = require('./../../../configuration.json');
 
 module.exports = class EmailService {
   static async send(subject, message, to = undefined) {
     let mailOptions = {
-      from: mail.user,
-      to: to ? to : mail.to,
+      from: process.env.MAIL_USER,
+      to: to ? to : process.env.MAIL_TO,
       subject: subject,
       html: message,
     };
-
     let transporter = nodemailer.createTransport({
-      name: mail.user,
-      host: mail.host,
-      port: mail.port,
-      secure: mail.secure,
+      name: process.env.MAIL_USER,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      secure: process.env.MAIL_SECURE,
       auth: {
-        user: mail.user,
-        pass: mail.password,
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
-      tls: { rejectUnauthorized: mail.tls },
+      tls: { rejectUnauthorized: process.env.MAIL_TLS },
     });
     return await transporter.sendMail(mailOptions);
   } // enviar
