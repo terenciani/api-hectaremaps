@@ -261,4 +261,13 @@ module.exports = class RegisterService {
       token: token,
     };
   } // loggedUserFormatter
+
+  static isValidToken(token) {
+    try {
+      const { user } = TokenUtil.decodeToken(token);
+      return {isValid: Boolean(user.id_user), message: 'ok'};
+    }catch (err) {
+      return { isValid: false, message: err.message }
+    }
+  } // isValidToken
 }; // class

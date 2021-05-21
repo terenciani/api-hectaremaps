@@ -1,7 +1,7 @@
 'use strict';
 
 const ConfigService = require('../services/ConfigService');
-
+const helpers = require('../helpers/index');
 module.exports = class ConfigController {
   static async getData(req, res) {
     try {
@@ -27,4 +27,8 @@ module.exports = class ConfigController {
       global.logger.error('ConfigController.setData ' + e.message);
     }
   } // setData()
+
+  static getHelpers(req, res) {
+    return res.status(helpers.httpStatusCode.OK).send(helpers.enumHelper)
+  }
 }; // class

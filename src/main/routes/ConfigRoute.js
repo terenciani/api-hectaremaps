@@ -11,5 +11,7 @@ module.exports = class ConfigRoute {
       .post(accessAdmin.verify, ConfigController.setData);
 
     app.route('/publicdata').get(ConfigController.getPublicData);
+
+    app.route('/get-helpers').get(ConfigController.getHelpers)
   } // constructor()
 }; // class

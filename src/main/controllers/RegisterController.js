@@ -53,5 +53,13 @@ module.exports = class RegisterController {
     }
   } // emailUpdateConfirm()
 
+  static validateIfTokenIsValid(req, res) {
+    const { token } = req.params;
+    if(!token) return res.status(401).send({ isValid: false });
+
+    const isValid = RegisterService.isValidToken(token);
+    return res.status(200).send({ isValid });
+  }
+
 
 }; // class
