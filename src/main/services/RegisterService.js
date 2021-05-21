@@ -6,7 +6,7 @@ const TokenUtil = require('../utils/TokenUtil');
 const generator = require('generate-password');
 const Database = require('../database/Connection');
 const UserService = require('../services/UserService');
-const { mail, api, admin } = require('../../../configuration.json');
+const { admin } = require('../../../configuration.json');
 
 module.exports = class RegisterService {
   static async signUp(data) {
@@ -265,9 +265,9 @@ module.exports = class RegisterService {
   static isValidToken(token) {
     try {
       const { user } = TokenUtil.decodeToken(token);
-      return {isValid: Boolean(user.id_user), message: 'ok'};
-    }catch (err) {
-      return { isValid: false, message: err.message }
+      return { isValid: Boolean(user.id_user), message: 'ok' };
+    } catch (err) {
+      return { isValid: false, message: err.message };
     }
   } // isValidToken
 }; // class

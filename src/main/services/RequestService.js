@@ -3,7 +3,6 @@
 const fs = require('fs');
 const Database = require('../database/Connection');
 const rimraf = require('rimraf');
-const zip = require('express-zip');
 
 module.exports = class RequestService {
   static async getAllRequests() {
