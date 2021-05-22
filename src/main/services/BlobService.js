@@ -3,6 +3,8 @@
 const azure = require('azure-storage');
 const Busboy = require('busboy');
 const RequestService = require('./RequestService');
+const fs = require('fs');
+const path = require('path');
 const Database = require('../database/Connection');
 
 module.exports = class BlobService {
@@ -22,6 +24,7 @@ module.exports = class BlobService {
             // content and metadata within this container
 
             var busboy = new Busboy({ headers: req.headers });
+            let originFilename = '';
 
             busboy.on(
               'file',
@@ -34,6 +37,7 @@ module.exports = class BlobService {
                       'req-' + requestId,
                       filename
                     );
+                    originFilename = filename;
                     RequestService.postImageRequest(filename, requestId);
                     //pipe req to Azure BLOB write stream
                     file.pipe(stream);
@@ -41,10 +45,12 @@ module.exports = class BlobService {
                 });
               }
             );
-            busboy.on('finish', function () {
-              res
-                .status(200)
-                .send({ status: 200, message: 'Arquivo enviado com sucesso!' });
+            busboy.on('finish', function (filename) {
+              res.status(200).send({
+                status: 200,
+                message: 'Arquivo enviado com sucessod !',
+                filename: originFilename,
+              });
             });
 
             req.pipe(busboy);
@@ -64,6 +70,54 @@ module.exports = class BlobService {
       throw new Error('ImageService.postReport: ' + error);
     }
   }
+  static async postLocalRequest(req, res, next) {
+    //create write stream for blob
+    try {
+      let requestId = req.params.id_request;
+      var busboy = new Busboy({ headers: req.headers });
+      let originFilename = '';
+
+      const localpath = `./uploads/request/${requestId}`;
+      fs.mkdirSync(localpath, { recursive: true });
+
+      busboy.on(
+        'file',
+        function (fieldname, file, filename, encoding, mimetype) {
+          RequestService.existImage(requestId, filename).then((data) => {
+            if (data.length > 0) {
+              throw new Error('O arquivo ' + filename + ' já existe!');
+            } else {
+              originFilename = filename;
+              RequestService.postImageRequest(filename, requestId);
+              //pipe req to Azure BLOB write stream
+              file.pipe(fs.createWriteStream(`${localpath}/${filename}`));
+            }
+          });
+        }
+      );
+      busboy.on('finish', function (filename) {
+        res.status(200).send({
+          status: 200,
+          message: 'Arquivo enviado com sucessod !',
+          filename: originFilename,
+        });
+      });
+
+      req.pipe(busboy);
+
+      req.on('error', function (error) {
+        //KO - handle piping errors
+        console.log('error: ' + error);
+      });
+      req.once('end', function () {
+        //OK
+        console.log('all ok');
+      });
+    } catch (error) {
+      throw new Error('ImageService.postReport: ' + error);
+    }
+  }
+
   static async postBlobReport(req, res, next) {
     //create write stream for blob
     const blobSvc = azure.createBlobService(process.env.AZURE_CREDENTIAL);

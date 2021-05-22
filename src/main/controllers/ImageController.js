@@ -82,6 +82,15 @@ module.exports = class ImageController {
     }
   } // postBlobRequest()
 
+  static async postLocalRequest(req, res) {
+    try {
+      await BlobService.postLocalRequest(req, res);
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('ImageController.postLocalRequest ' + e.message);
+    }
+  } // postLocalRequest()
+
   static async postReport(req, res) {
     try {
       await ImageService.postReport(req, res);

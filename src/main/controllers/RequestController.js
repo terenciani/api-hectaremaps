@@ -74,6 +74,15 @@ module.exports = class RequestController {
     }
   } // cancelRequest()
 
+  static async cancelLocalRequest(req, res) {
+    try {
+      res.status(200).send(await RequestService.cancelLocalRequest(req.body));
+    } catch (e) {
+      res.status(500).send(e.message);
+      global.logger.error('RequestController.cancelLocalRequest ' + e.message);
+    }
+  } // cancelLocalRequest()
+
   static async cancelRequestOld(req, res) {
     try {
       res.status(200).send(await RequestService.cancelRequest(req.body));

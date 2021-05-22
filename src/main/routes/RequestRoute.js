@@ -13,7 +13,9 @@ module.exports = class RequestRoute {
       .put(access.verify, RequestController.update)
       .post(access.verify, RequestController.createRequest)
       .delete(access.verify, RequestController.cancelRequest);
-
+    app
+      .route('/request/local')
+      .delete(access.verify, RequestController.cancelLocalRequest);
     app
       .route('/request/:id_user')
       .get(access.verify, RequestController.getRequestActivesByUser);

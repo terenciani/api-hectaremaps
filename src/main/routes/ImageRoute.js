@@ -30,6 +30,11 @@ module.exports = class ImageRoute {
     app
       .route('/servicerequest/big/:id_request')
       .post(access.verify, ImageController.postBlobRequest);
+
+    app
+      .route('/servicerequest/local/:id_request')
+      .post(access.verify, ImageController.postLocalRequest);
+
     app
       .route('/upload/report/:id_request')
       .post(accessAdmin.verify, ImageController.postBlobReport);

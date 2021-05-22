@@ -124,6 +124,17 @@ module.exports = class RequestService {
     }
   } // cancelRequest()
 
+  static async cancelLocalRequest({ request }) {
+    try {
+      rimraf.sync(`${appRoot}/uploads/request/${request}`);
+      return `${await Database('request')
+        .where({ id_request: request })
+        .del()}`;
+    } catch (error) {
+      throw new Error('RequestService.cancelRequest: ' + error);
+    }
+  } // cancelRequest()
+
   static async updateStatus(requestId, status) {
     try {
       let row = await Database('request')
