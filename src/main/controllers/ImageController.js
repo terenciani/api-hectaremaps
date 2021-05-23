@@ -75,7 +75,7 @@ module.exports = class ImageController {
 
   static async postBlobRequest(req, res) {
     try {
-      await BlobService.postBlobRequest(req, res);
+      await BlobService.postV2(req, res);
     } catch (e) {
       res.status(500).send(e.message);
       global.logger.error('ImageController.postBlobRequest ' + e.message);
